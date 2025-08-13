@@ -3,19 +3,30 @@ name: Update App Store KR Top 10
 on:
   schedule:
     - cron: "0 23 * * *"   # 매일 08:00 KST (UTC 23:00)
-  workflow_dispatch:
+  workflow_dispatch:       # 수동 실행
+
+permissions:
+  contents: write          # JSON 커밋/푸시 권한
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.x'
-      - run: python scripts/update_appstore_kr.py
-      - run: git config user.name "github-actions[bot]"
-      - run: git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - run: git add data/appstore-kr.json
-      - run: git commit -m "auto: update appstore KR top10" || echo "No changes"
-      - run: git push
+          node-version: '20'   # Node 20은 fetch 내장
+
+      - name: Run updater
+        run: node scripts/update-appstore.js
+
+      - name: Commit & push JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/appstore-kr.json
+          git commit -m "auto: update App Store KR top10" || echo "No changes"
+          git push
