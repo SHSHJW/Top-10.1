@@ -1,0 +1,21 @@
+name: Update App Store KR Top 10
+
+on:
+  schedule:
+    - cron: "0 23 * * *"   # 매일 08:00 KST (UTC 23:00)
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python scripts/update_appstore_kr.py
+      - run: git config user.name "github-actions[bot]"
+      - run: git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: git add data/appstore-kr.json
+      - run: git commit -m "auto: update appstore KR top10" || echo "No changes"
+      - run: git push
