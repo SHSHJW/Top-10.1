@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Top 10 Hub</title>
+  <meta name="description" content="매일 자동 업데이트되는 인기 차트 허브" />
+  <style>
+    :root{--bg:#0b1220;--muted:#8b9bb6;--text:#e6edf7}
+    *{box-sizing:border-box} html,body{margin:0}
+    body{background:linear-gradient(135deg,#0b1220,#111827);color:var(--text);font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:960px;margin:0 auto;padding:24px}
+    header{position:sticky;top:0;background:rgba(11,18,32,.6);backdrop-filter:blur(10px);border-bottom:1px solid #22304a}
+    .card{display:block;background:#0f172a;border:1px solid #22304a;border-radius:16px;padding:18px;color:#cfe0ff;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px}
+    .muted{color:var(--muted);font-size:13px}
+    a:hover{text-decoration:underline}
+    footer{padding:24px;color:#8da0c0;text-align:center;font-size:12px}
+  </style>
+</head>
+<body>
+  <header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center">
+    <h1 style="margin:0;font-size:26px">Daily Top 10 Hub</h1>
+    <a href="appstore-kr.html" style="color:#9dc1ff">App Store KR 보기 →</a>
+  </div></header>
+
+  <main class="wrap">
+    <p class="muted">자동 수집·갱신되는 인기 순위 모음. 광고 친화적인 합법 데이터만 다룹니다.</p>
+    <div class="grid">
+      <a class="card" href="appstore-kr.html">
+        <strong>App Store KR Top 10</strong><br />
+        <span class="muted">매일 08:00(KST) 자동 업데이트</span>
+      </a>
+    </div>
+  </main>
+
+  <footer>© <span id="y"></span> Top10</footer>
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>
