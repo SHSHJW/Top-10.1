@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>App Store KR Top 10 – Daily</title>
+  <meta name="description" content="매일 자동 업데이트되는 한국 앱스토어 Top 10" />
+  <style>
+    :root{--muted:#9db0cc}
+    body{margin:0;background:#0b1220;color:#e6edf7;font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header{position:sticky;top:0;background:#0f172a;border-bottom:1px solid #22304a}
+    .wrap{max-width:960px;margin:0 auto;padding:18px}
+    h1{margin:0;font-size:24px}
+    .muted{color:var(--muted);font-size:13px}
+    ol{background:#0f172a;border:1px solid #22304a;border-radius:16px;overflow:hidden;margin:16px auto;max-width:960px;padding:0}
+    li{display:flex;gap:14px;align-items:center;padding:14px 16px;border-top:1px solid #1b2438}
+    li:first-child{border-top:0}
+    .rank{width:36px;text-align:right;font-weight:700}
+    .icon{width:48px;height:48px;border-radius:12px;background:#0b1220;overflow:hidden;flex-shrink:0;border:1px solid #23314d}
+    .title{font-weight:600}
+    .sub{font-size:12px;color:var(--muted)}
+    a{color:#cfe0ff;text-decoration:none} a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center">
+    <h1>App Store KR Top 10</h1>
+    <div id="updatedAt" class="muted">로딩 중…</div>
+  </div></header>
+
+  <main class="wrap">
+    <a href="index.html" style="color:#9dc1ff">← 돌아가기</a>
+  </main>
+  <ol id="list"></ol>
+  <footer class="wrap" style="text-align:center;color:#8da0c0;font-size:12px;padding:24px 0">© <span id="y"></span> Top10</footer>
+
+  <script>
+    const listEl=document.getElementById('list');
+    const updatedAtEl=document.getElementById('updatedAt');
+    document.getElementById('y').textContent=new Date().getFullYear();
+
+    function render(payload){
+      const items=(payload&&payload.items)||[];
+      updatedAtEl.textContent='업데이트: '+new Date(payload?.updatedAt||Date.now()).toLocaleString('ko-KR');
+      listEl.innerHTML='';
+      const data=items.length?items:[
+        {rank:1,title:'데모 앱 1',artist:'회사 A',category:'게임',url:'#',price:'무료'},
+        {rank:2,title:'데모 앱 2',artist:'회사 B',category:'생산성',url:'#',price:'₩1,000'},
+        {rank:3,title:'데모 앱 3',artist:'회사 C',category:'유틸리티',url:'#',price:'무료'}
+      ];
+      data.slice(0,10).forEach(it=>{
+        const li=document.createElement('li');
+        li.innerHTML=`
+          <div class="rank">${it.rank??'-'}</div>
+          <div class="icon">${it.icon?`<img src="${it.icon}" alt="" style="width:100%;height:100%;object-fit:cover">`:''}</div>
+          <div style="flex:1;min-width:0">
+            <a class="title" href="${it.url||'#'}" target="_blank" rel="noreferrer noopener">${it.title||''}</a>
+            <div class="sub">${(it.artist||'')}${it.category?(' · '+it.category):''} · ${it.price||'무료'}</div>
+          </div>`;
+        listEl.appendChild(li);
+      });
+    }
+
+    (async()=>{
+      try{
+        const res=await fetch('data/appstore-kr.json',{cache:'no-store'});
+        if(!res.ok) throw new Error('no json');
+        render(await res.json());
+      }catch(e){
+        render({updatedAt:new Date().toISOString(),items:[]});
+      }
+    })();
+  </script>
+</body>
+</html>
